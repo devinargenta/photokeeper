@@ -39,5 +39,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>bcuz i love u</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Permission needed for taking picture or video</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Permission needed for saving picture to Camera roll</string>
 </dict>
 </plist>
