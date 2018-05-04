@@ -9,11 +9,13 @@
 /* Begin PBXBuildFile section */
 		9ECFBEF8209BA47400047B80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBEF7209BA47400047B80 /* AppDelegate.swift */; };
 		9ECFBEFA209BA47400047B80 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBEF9209BA47400047B80 /* ViewController.swift */; };
-		9ECFBEFD209BA47400047B80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ECFBEFB209BA47400047B80 /* Main.storyboard */; };
 		9ECFBEFF209BA47600047B80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ECFBEFE209BA47600047B80 /* Assets.xcassets */; };
 		9ECFBF02209BA47600047B80 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9ECFBF00209BA47600047B80 /* LaunchScreen.storyboard */; };
 		9ECFBF0D209BA47600047B80 /* PhotoKeeperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBF0C209BA47600047B80 /* PhotoKeeperTests.swift */; };
 		9ECFBF18209BA47600047B80 /* PhotoKeeperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBF17209BA47600047B80 /* PhotoKeeperUITests.swift */; };
+		9ECFBF26209BA52600047B80 /* PhotoGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBF25209BA52600047B80 /* PhotoGridViewController.swift */; };
+		9ECFBF28209BA83B00047B80 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBF27209BA83B00047B80 /* CameraViewController.swift */; };
+		9ECFBF2A209CAC4300047B80 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBF29209CAC4300047B80 /* PhotoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +39,6 @@
 		9ECFBEF4209BA47400047B80 /* PhotoKeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECFBEF7209BA47400047B80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9ECFBEF9209BA47400047B80 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		9ECFBEFC209BA47400047B80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9ECFBEFE209BA47600047B80 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9ECFBF01209BA47600047B80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9ECFBF03209BA47600047B80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -47,6 +48,9 @@
 		9ECFBF13209BA47600047B80 /* PhotoKeeperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoKeeperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECFBF17209BA47600047B80 /* PhotoKeeperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoKeeperUITests.swift; sourceTree = "<group>"; };
 		9ECFBF19209BA47600047B80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9ECFBF25209BA52600047B80 /* PhotoGridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGridViewController.swift; sourceTree = "<group>"; };
+		9ECFBF27209BA83B00047B80 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		9ECFBF29209CAC4300047B80 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,10 +103,12 @@
 			children = (
 				9ECFBEF7209BA47400047B80 /* AppDelegate.swift */,
 				9ECFBEF9209BA47400047B80 /* ViewController.swift */,
-				9ECFBEFB209BA47400047B80 /* Main.storyboard */,
 				9ECFBEFE209BA47600047B80 /* Assets.xcassets */,
 				9ECFBF00209BA47600047B80 /* LaunchScreen.storyboard */,
 				9ECFBF03209BA47600047B80 /* Info.plist */,
+				9ECFBF25209BA52600047B80 /* PhotoGridViewController.swift */,
+				9ECFBF29209CAC4300047B80 /* PhotoViewController.swift */,
+				9ECFBF27209BA83B00047B80 /* CameraViewController.swift */,
 			);
 			path = PhotoKeeper;
 			sourceTree = "<group>";
@@ -231,7 +237,6 @@
 			files = (
 				9ECFBF02209BA47600047B80 /* LaunchScreen.storyboard in Resources */,
 				9ECFBEFF209BA47600047B80 /* Assets.xcassets in Resources */,
-				9ECFBEFD209BA47400047B80 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,7 +262,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9ECFBEFA209BA47400047B80 /* ViewController.swift in Sources */,
+				9ECFBF28209BA83B00047B80 /* CameraViewController.swift in Sources */,
 				9ECFBEF8209BA47400047B80 /* AppDelegate.swift in Sources */,
+				9ECFBF26209BA52600047B80 /* PhotoGridViewController.swift in Sources */,
+				9ECFBF2A209CAC4300047B80 /* PhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,14 +301,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		9ECFBEFB209BA47400047B80 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9ECFBEFC209BA47400047B80 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		9ECFBF00209BA47600047B80 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
