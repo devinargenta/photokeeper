@@ -60,6 +60,11 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
             capturePhotoOutput = AVCapturePhotoOutput()
             capturePhotoOutput?.isHighResolutionCaptureEnabled = true
 
+            
+            if captureSession!.canAddOutput(capturePhotoOutput!) {
+                captureSession?.addOutput(capturePhotoOutput!)
+            }
+
             videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
             videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             
@@ -107,10 +112,11 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         // Set photo settings for our need
         photoSettings.isAutoStillImageStabilizationEnabled = true
         photoSettings.isHighResolutionPhotoEnabled = true
-        photoSettings.flashMode = .auto
+       // photoSettings.flashMode = .auto
         
         // Call capturePhoto method by passing our photo settings and a delegate implementing AVCapturePhotoCaptureDelegate
-        self.captureSession?.addOutput(capturePhotoOutput)
+       // self.captureSession?.addOutput(capturePhotoOutput)
+        
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
     
         // hide the camera icon thingie
@@ -251,6 +257,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         let imageData = photo.fileDataRepresentation()
+    
         let capturedImage = UIImage.init(data: imageData! , scale: 1.0)
         if let image = capturedImage {
             // Save our captured image to photos album
@@ -261,10 +268,26 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
 
             camPlaceholder.addSubview(iView)
             camPlaceholder.clipsToBounds = true
+            
+            // idk how 2 crop this
         
-            //UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        
+            UIImageWriteToSavedPhotosAlbum(iView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             
         }
     }
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "Saved!", message: "Your altered image has been saved to your photos.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
+    }
+
 }
 
