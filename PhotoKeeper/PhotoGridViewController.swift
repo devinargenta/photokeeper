@@ -40,7 +40,6 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(showComposer))
         
         let navBar = navigationController?.navigationBar
-
         navBar?.barTintColor = .white
         navBar?.isTranslucent = false
         navBar?.tintColor = black

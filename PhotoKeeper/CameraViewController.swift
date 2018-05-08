@@ -86,7 +86,33 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
     }
     
     @objc func savePhoto() {
-        UIImageWriteToSavedPhotosAlbum(iView.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        
+        // https://stackoverflow.com/questions/32836862/how-to-use-writetofile-to-save-image-in-document-directory
+        // https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults
+
+        // get the documents directory url
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let uniqueString = ProcessInfo.processInfo.globallyUniqueString
+        let defaults = UserDefaults.standard
+        let fileName = "image-\(uniqueString)"
+        // create the destination file url to save your image
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        // get your UIImage jpeg data representation and check if the destination file url already exists
+        if let image = iView.image, let data = UIImageJPEGRepresentation(image, 1.0),
+            !FileManager.default.fileExists(atPath: fileURL.path) {
+            do {
+                // writes the image data to disk
+                try data.write(to: fileURL)
+                // store the path && info in our data
+                let imageObj = ImageObject(fileName: fileName, title: titleField.text, description: descriptionField.text)
+                var savedImages = defaults.array(forKey: "storedImages") as! [ImageObject]
+                savedImages.append(imageObj)
+                defaults.set(savedImages, forKey: "storedImages")
+                print("file saved")
+            } catch {
+                print("error saving file:", error)
+            }
+        }
     }
     
     @objc func takePhoto() {
@@ -227,20 +253,18 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
 
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        let imageData = photo.fileDataRepresentation()
-    
-        let capturedImage = UIImage.init(data: imageData! , scale: 1.0)
-        if let image = capturedImage {
-            iView.image = image
-            iView.frame = CGRect(x: 0, y: 0, width: camPlaceholder.frame.width, height: camPlaceholder.frame.height)
-            iView.contentMode = .scaleAspectFill
-
-            camPlaceholder.addSubview(iView)
-            camPlaceholder.clipsToBounds = true
-            
-            // idk how 2 crop this
-        
-            
+        if let imageData = photo.fileDataRepresentation() {
+            let capturedImage = UIImage.init(data: imageData, scale: 1.0)
+            if let image = capturedImage {
+                iView.image = image
+                iView.frame = CGRect(x: 0, y: 0, width: camPlaceholder.frame.width, height: camPlaceholder.frame.height)
+                iView.contentMode = .scaleAspectFill
+                
+                camPlaceholder.addSubview(iView)
+                camPlaceholder.clipsToBounds = true
+                
+                // idk how 2 crop this
+            }
         }
     }
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
