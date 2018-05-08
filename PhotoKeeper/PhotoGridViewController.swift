@@ -19,7 +19,8 @@ struct Trash {
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
     private let reuseIdentifier = "PhotoCell"
-    var data = [Trash]()
+    var data = [ImageObject]()
+    var backup = [Trash]()
     let black = UIColor(hue: 0.5278, saturation: 0.9, brightness: 0.23, alpha: 1.0)
     var topBarHeight: CGFloat = 0
     override func viewDidLoad() {
@@ -30,10 +31,15 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
         // self.clearsSelectionOnViewWillAppear = false
 
         // Register cell classes
-        for i in 0...100 {
-            let f = Trash(title: "I am \(i)", description: nil, image: nil)
-            data.append(f)
+        if let storedData = UserDefaults.standard.array(forKey: "storedImages") as! [ImageObject]? {
+            data = storedData
+        } else {
+            for i in 0...100 {
+                let f = Trash(title: "I am \(i)", description: nil, image: nil)
+                backup.append(f)
+            }
         }
+       
 
         collectionView?.backgroundColor = .white
     
