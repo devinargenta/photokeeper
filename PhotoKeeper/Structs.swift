@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ImageObject {
+struct ImageObject: Codable {
     var fileName: String // idk if this works
     var title: String!
     var description: String!

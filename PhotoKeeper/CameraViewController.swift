@@ -37,7 +37,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         view.backgroundColor = .white
         navigationController?.navigationBar.barStyle = .blackTranslucent
         navigationController?.navigationBar.tintColor = .white
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(cancel))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeView))
         camPlaceholder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width)
         camPlaceholder.backgroundColor = .black
         view.addSubview(camPlaceholder)
@@ -81,7 +81,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         }
     }
     
-    @objc func cancel() {
+    @objc func closeView() {
         dismiss(animated: true, completion: nil)
     }
     
@@ -105,10 +105,14 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
                 try data.write(to: fileURL)
                 // store the path && info in our data
                 let imageObj = ImageObject(fileName: fileName, title: titleField.text, description: descriptionField.text)
-                var savedImages = defaults.array(forKey: "storedImages") as! [ImageObject]
-                savedImages.append(imageObj)
-                defaults.set(savedImages, forKey: "storedImages")
+                if let encoded = try? JSONEncoder().encode(imageObj) {
+                    var savedImages = defaults.array(forKey: "storedImages") as? [Data] ?? []
+                    savedImages.append(encoded)
+                    defaults.set(savedImages, forKey: "storedImages")
+                }
+               
                 print("file saved")
+                closeView()
             } catch {
                 print("error saving file:", error)
             }
