@@ -58,7 +58,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
             let input = try AVCaptureDeviceInput(device: captureDevice)
             
             captureSession = AVCaptureSession()
-            captureSession?.sessionPreset = AVCaptureSession.Preset.high
+            captureSession?.sessionPreset = AVCaptureSession.Preset.photo
             captureSession?.addInput(input)
             
             // Get an instance of ACCapturePhotoOutput class
@@ -265,6 +265,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         if let imageData = photo.fileDataRepresentation() {
             let capturedImage = UIImage.init(data: imageData, scale: 1.0)
             if let image = capturedImage {
+                iView.contentMode = .scaleAspectFill
                 iView.image = image
                 iView.frame = UIScreen.main.bounds
             
@@ -272,8 +273,6 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                 iView.center = view.center
                 camPlaceholder.addSubview(iView)
 
-
-                // idk how 2 crop this
             }
         }
     }

@@ -19,12 +19,12 @@ class PhotoViewController: UIViewController {
         title = imageTitle
         view.backgroundColor = .black
         if image != nil {
-            let imageView = UIImageView(image: image)
+            let imageView = UIImageView()
             view.clipsToBounds = true
-            imageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.width)
+            imageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
             imageView.contentMode = .scaleAspectFill
+            imageView.image = image
             imageView.clipsToBounds = true
-            imageView.center.x = view.center.x
             view.addSubview(imageView)
         } else {
             view.backgroundColor = UIColor(hue: 0.5722, saturation: 0.73, brightness: 0.82, alpha: 1.0) /* #388ed1 */
