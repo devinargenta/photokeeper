@@ -38,7 +38,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         navigationController?.navigationBar.barStyle = .blackTranslucent
         navigationController?.navigationBar.tintColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeView))
-        camPlaceholder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.width)
+        camPlaceholder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         camPlaceholder.backgroundColor = .black
         view.addSubview(camPlaceholder)
         buildMetaForm()
@@ -63,6 +63,8 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
             
             // Get an instance of ACCapturePhotoOutput class
             capturePhotoOutput = AVCapturePhotoOutput()
+            let settings = AVCapturePhotoSettings()
+            settings.livePhotoVideoCodecType = .jpeg
             capturePhotoOutput?.isHighResolutionCaptureEnabled = true
     
             if captureSession!.canAddOutput(capturePhotoOutput!) {
@@ -89,7 +91,6 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         
         // https://stackoverflow.com/questions/32836862/how-to-use-writetofile-to-save-image-in-document-directory
         // https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults
-
         // get the documents directory url
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let uniqueString = ProcessInfo.processInfo.globallyUniqueString
@@ -105,6 +106,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
                 try data.write(to: fileURL)
                 // store the path && info in our data
                 let imageObj = ImageObject(fileName: fileName, title: titleField.text, description: descriptionField.text)
+                print(imageObj)
                 if let encoded = try? JSONEncoder().encode(imageObj) {
                     var savedImages = defaults.array(forKey: "storedImages") as? [Data] ?? []
                     savedImages.append(encoded)
@@ -123,13 +125,15 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         // take a  photo
         guard let capturePhotoOutput = self.capturePhotoOutput else { return }
         // Get an instance of AVCapturePhotoSettings class
-        let photoSettings = AVCapturePhotoSettings()
         // Set photo settings for our need
+    
+        let photoSettings = AVCapturePhotoSettings()
+        photoSettings.livePhotoVideoCodecType = .jpeg
         photoSettings.isAutoStillImageStabilizationEnabled = true
-        photoSettings.isHighResolutionPhotoEnabled = true
+      //  photoSettings.isHighResolutionPhotoEnabled = true
         // Call capturePhoto method by passing our photo settings and a delegate implementing AVCapturePhotoCaptureDelegate
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
-
+        
         // hide the camera icon thingie
         snappyBoi.isHidden = true
         
@@ -256,17 +260,19 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
 }
 
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
+
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let imageData = photo.fileDataRepresentation() {
             let capturedImage = UIImage.init(data: imageData, scale: 1.0)
             if let image = capturedImage {
                 iView.image = image
-                iView.frame = CGRect(x: 0, y: 0, width: camPlaceholder.frame.width, height: camPlaceholder.frame.height)
-                iView.contentMode = .scaleAspectFill
-                
+                iView.frame = UIScreen.main.bounds
+            
+                iView.clipsToBounds = true
+                iView.center = view.center
                 camPlaceholder.addSubview(iView)
-                camPlaceholder.clipsToBounds = true
-                
+
+
                 // idk how 2 crop this
             }
         }
