@@ -41,7 +41,7 @@ class PhotoViewController: UIViewController {
         tl.backgroundColor = .red
         view.addSubview(tl)
         
-        let dl = UILabel(frame: CGRect(x: 20, y: tl.frame.origin.y + tl.frame.size.height + 20, width: view.frame.width - 40, height: 120))
+        let dl = UILabel(frame: CGRect(x: 40, y: tl.frame.origin.y + tl.frame.size.height + 20, width: view.frame.width, height: 120))
         dl.text = imageDescription
         dl.numberOfLines = 0
         dl.backgroundColor = .blue

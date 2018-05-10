@@ -13,3 +13,12 @@ struct ImageObject: Codable {
     var title: String!
     var description: String!
 }
+
+class Images {
+    var images = [ImageObject]()
+    func setImages(newImages: [Data]) -> Void {
+        self.images = newImages.compactMap{ (item: Any) -> ImageObject in
+            return try! JSONDecoder().decode(ImageObject.self, from: item as! Data)
+        }
+    }
+}

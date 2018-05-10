@@ -9,7 +9,7 @@
 import UIKit
 
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    var data = [ImageObject]()
+    var data = Images()
     var topBarHeight: CGFloat = 0
     
     private let reuseIdentifier = "PhotoCell"
@@ -47,9 +47,9 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     // MARK: UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView,
                                  didSelectItemAt indexPath: IndexPath) {
-        let item = data[indexPath.row]
+        let item = data.images[indexPath.row]
         let pvc = PhotoViewController()
-        let imageName = data[indexPath.row].fileName
+        let imageName = data.images[indexPath.row].fileName
         let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
         pvc.image = UIImage(contentsOfFile: imagePath.path)
         pvc.imageTitle = item.title
@@ -63,13 +63,13 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        return data.count
+        return data.images.count
     }
 
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        let imageName = data[indexPath.row].fileName
+        let imageName = data.images[indexPath.row].fileName
         let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
         if FileManager.default.fileExists(atPath: imagePath.path) {
             let image = UIImage(contentsOfFile: imagePath.path)
@@ -113,11 +113,9 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // lets recapture all the data
-        if let storedImages = UserDefaults.standard.array(forKey: "storedImages") {
+        if let storedImages = UserDefaults.standard.array(forKey: "storedImages") as? [Data] {
             // reset the data if we have any ( easier logic rn)
-            data = storedImages.compactMap{ (item: Any) -> ImageObject in
-                return try! JSONDecoder().decode(ImageObject.self, from: item as! Data)
-            }.reversed()
+            data.setImages(newImages: storedImages.reversed())
         }
         // reload baby
         collectionView?.reloadData()

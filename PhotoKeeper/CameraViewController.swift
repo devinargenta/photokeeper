@@ -57,13 +57,31 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         
         metaForm.frame = CGRect(x: view.frame.width, y: view.frame.width + 20, width: view.frame.width - 40, height: view.frame.width / 2 - 40 )
         metaForm.alpha = 0.0
-
+        let tf = buildTitleField()
+        let df = buildDescriptionField()
+        
+        // MARK: submit button
+        submitButton.frame = CGRect(x: 0, y: view.frame.height + 60, width: view.frame.width / 2 - 10, height: 50)
+        submitButton.center.x = view.frame.width - 120
+        submitButton.setTitle("Save", for: .normal)
+        submitButton.backgroundColor = .red
+        submitButton.setTitleColor(.white, for: .normal)
+        submitButton.addTarget(self, action: #selector(savePhoto), for: .touchUpInside)
+        
+        metaForm.addSubview(tf)
+        metaForm.addSubview(df)
+        
+        view.addSubview(submitButton)
+        view.addSubview(metaForm)
+    }
+    
+    func buildTitleField() -> UITextField {
         // MARK: titlefield
         let titleLabel = UILabel(frame: CGRect(x: 0, y: -25, width: 200, height: 20))
         titleLabel.textColor = blueblack
         titleLabel.font = UIFont.systemFont(ofSize: 15)
         titleLabel.text = "Title"
-
+        
         titleField.frame = CGRect(x: 0, y: 20, width: view.frame.width - 40, height: 40)
         titleField.font = UIFont.systemFont(ofSize: 15)
         titleField.attributedPlaceholder = NSAttributedString(string: "Title", attributes: [NSAttributedStringKey.foregroundColor : blueblack])
@@ -79,7 +97,11 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         titleField.clearButtonMode = .whileEditing;
         titleField.delegate = self
         titleField.contentVerticalAlignment = UIControlContentVerticalAlignment.center
-
+        titleField.addSubview(titleLabel)
+        return titleField
+    }
+    
+    func buildDescriptionField() -> UITextView {
         // MARK: descriptionfield
         let descLabel = UILabel(frame: CGRect(x: 0, y: -25, width: 200, height: 20))
         descLabel.textColor = blueblack
@@ -98,22 +120,9 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         descriptionField.delegate = self
         descriptionField.keyboardType = .default
         descriptionField.returnKeyType = .default
-        
-        // MARK: submit button
-        submitButton.frame = CGRect(x: 0, y: view.frame.height + 60, width: view.frame.width / 2 - 10, height: 50)
-        submitButton.center.x = view.frame.width - 120
-        submitButton.setTitle("Save", for: .normal)
-        submitButton.backgroundColor = .red
-        submitButton.setTitleColor(.white, for: .normal)
-        submitButton.addTarget(self, action: #selector(savePhoto), for: .touchUpInside)
-        
-        titleField.addSubview(titleLabel)
-        metaForm.addSubview(titleField)
         descriptionField.addSubview(descLabel)
-        metaForm.addSubview(descriptionField)
+        return descriptionField
         
-        view.addSubview(submitButton)
-        view.addSubview(metaForm)
     }
     
     func buildCameraButton(){
