@@ -26,126 +26,33 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
     let descriptionField = UITextView()
     let submitButton = UIButton()
     let iView = UIImageView()
-
     // MARK: colors
     let blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
-    
-    
+
     // MARK: the app
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupView()
+        handleKeyboardEvents()
+    }
+
+    func setupView() {
         view.backgroundColor = .white
         navigationController?.navigationBar.barStyle = .blackTranslucent
         navigationController?.navigationBar.tintColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeView))
-        camPlaceholder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-        camPlaceholder.backgroundColor = .black
-        view.addSubview(camPlaceholder)
+        buildCamPlaceholder()
         buildMetaForm()
         buildCameraButton()
         initializeCaptureDevice()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    func initializeCaptureDevice() {
-        
-        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
-            fatalError("No video device found")
-        }
-        
-        do {
-            let input = try AVCaptureDeviceInput(device: captureDevice)
-            
-            captureSession = AVCaptureSession()
-            captureSession?.sessionPreset = AVCaptureSession.Preset.photo
-            captureSession?.addInput(input)
-            
-            // Get an instance of ACCapturePhotoOutput class
-            capturePhotoOutput = AVCapturePhotoOutput()
-            let settings = AVCapturePhotoSettings()
-            settings.livePhotoVideoCodecType = .jpeg
-            capturePhotoOutput?.isHighResolutionCaptureEnabled = true
-    
-            if captureSession!.canAddOutput(capturePhotoOutput!) {
-                captureSession?.addOutput(capturePhotoOutput!)
-            }
-            
-            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-            videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
-            videoPreviewLayer?.frame = camPlaceholder.layer.bounds
-            
-            //start video capture
-            camPlaceholder.layer.addSublayer(videoPreviewLayer!)
-            captureSession?.startRunning()
-        } catch {
-            print(error)
-        }
+    func buildCamPlaceholder() {
+        camPlaceholder.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        camPlaceholder.backgroundColor = .black
+        view.addSubview(camPlaceholder)
     }
-    
-    @objc func closeView() {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func savePhoto() {
-        
-        // https://stackoverflow.com/questions/32836862/how-to-use-writetofile-to-save-image-in-document-directory
-        // https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults
-        // get the documents directory url
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let uniqueString = ProcessInfo.processInfo.globallyUniqueString
-        let defaults = UserDefaults.standard
-        let fileName = "image-\(uniqueString)"
-        // create the destination file url to save your image
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
-        // get your UIImage jpeg data representation and check if the destination file url already exists
-        if let image = iView.image, let data = UIImageJPEGRepresentation(image, 1.0),
-            !FileManager.default.fileExists(atPath: fileURL.path) {
-            do {
-                // writes the image data to disk
-                try data.write(to: fileURL)
-                // store the path && info in our data
-                let imageObj = ImageObject(fileName: fileName, title: titleField.text, description: descriptionField.text)
-                print(imageObj)
-                if let encoded = try? JSONEncoder().encode(imageObj) {
-                    var savedImages = defaults.array(forKey: "storedImages") as? [Data] ?? []
-                    savedImages.append(encoded)
-                    defaults.set(savedImages, forKey: "storedImages")
-                }
-               
-                print("file saved")
-                closeView()
-            } catch {
-                print("error saving file:", error)
-            }
-        }
-    }
-    
-    @objc func takePhoto() {
-        // take a  photo
-        guard let capturePhotoOutput = self.capturePhotoOutput else { return }
-        // Get an instance of AVCapturePhotoSettings class
-        // Set photo settings for our need
-    
-        let photoSettings = AVCapturePhotoSettings()
-        photoSettings.livePhotoVideoCodecType = .jpeg
-        photoSettings.isAutoStillImageStabilizationEnabled = true
-      //  photoSettings.isHighResolutionPhotoEnabled = true
-        // Call capturePhoto method by passing our photo settings and a delegate implementing AVCapturePhotoCaptureDelegate
-        capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
-        
-        // hide the camera icon thingie
-        snappyBoi.isHidden = true
-        
-        // show meta stuff
-        UIView.animate(withDuration: 0.5, animations: {
-            let mf = self.metaForm
-            mf.alpha = 1
-            mf.center.x = self.view.center.x
-            self.submitButton.frame.origin.y = self.view.frame.height - 80
-        })
 
-    }
     func buildMetaForm() {
         
         metaForm.frame = CGRect(x: view.frame.width, y: view.frame.width + 20, width: view.frame.width - 40, height: view.frame.width / 2 - 40 )
@@ -230,7 +137,102 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         sb.addTarget(self, action: #selector(takePhoto), for: UIControlEvents.touchUpInside)
         view.addSubview(sb)
     }
+}
+
+extension CameraViewController : AVCapturePhotoCaptureDelegate {
     
+    func initializeCaptureDevice() {
+        
+        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
+            fatalError("No video device found")
+        }
+        
+        do {
+            let input = try AVCaptureDeviceInput(device: captureDevice)
+            
+            captureSession = AVCaptureSession()
+            captureSession?.sessionPreset = AVCaptureSession.Preset.photo
+            captureSession?.addInput(input)
+            
+            // Get an instance of ACCapturePhotoOutput class
+            capturePhotoOutput = AVCapturePhotoOutput()
+            let settings = AVCapturePhotoSettings()
+            settings.livePhotoVideoCodecType = .jpeg
+            capturePhotoOutput?.isHighResolutionCaptureEnabled = true
+            
+            if captureSession!.canAddOutput(capturePhotoOutput!) {
+                captureSession?.addOutput(capturePhotoOutput!)
+            }
+            
+            videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+            videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            videoPreviewLayer?.frame = camPlaceholder.layer.bounds
+            
+            //start video capture
+            camPlaceholder.layer.addSublayer(videoPreviewLayer!)
+            captureSession?.startRunning()
+        } catch {
+            print(error)
+        }
+    }
+    
+    @objc func closeView() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func savePhoto() {
+        
+        // https://stackoverflow.com/questions/32836862/how-to-use-writetofile-to-save-image-in-document-directory
+        // https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults
+        // get the documents directory url
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let uniqueString = ProcessInfo.processInfo.globallyUniqueString
+        let defaults = UserDefaults.standard
+        let fileName = "image-\(uniqueString)"
+        // create the destination file url to save your image
+        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        // get your UIImage jpeg data representation and check if the destination file url already exists
+        if let image = iView.image, let data = UIImageJPEGRepresentation(image, 1.0),
+            !FileManager.default.fileExists(atPath: fileURL.path) {
+            do {
+                // writes the image data to disk
+                try data.write(to: fileURL)
+                // store the path && info in our data
+                let imageObj = ImageObject(fileName: fileName, title: titleField.text, description: descriptionField.text)
+                if let encoded = try? JSONEncoder().encode(imageObj) {
+                    var savedImages = defaults.array(forKey: "storedImages") as? [Data] ?? []
+                    savedImages.append(encoded)
+                    defaults.set(savedImages, forKey: "storedImages")
+                }
+                closeView()
+            } catch {
+                print("error saving file:", error)
+            }
+        }
+    }
+    
+    @objc func takePhoto() {
+        // take a  photo
+        guard let capturePhotoOutput = self.capturePhotoOutput else { return }
+        let photoSettings = AVCapturePhotoSettings()
+        photoSettings.livePhotoVideoCodecType = .jpeg
+        photoSettings.isAutoStillImageStabilizationEnabled = true
+        capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
+        snappyBoi.isHidden = true
+        // animate meta in
+        UIView.animate(withDuration: 0.5, animations: {
+            let mf = self.metaForm
+            mf.alpha = 1
+            mf.center.x = self.view.center.x
+            self.submitButton.frame.origin.y = self.view.frame.height - 80
+        })
+    }
+    
+    func handleKeyboardEvents() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
@@ -238,7 +240,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
             }
         }
     }
-
+    
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
@@ -256,11 +258,6 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         self.view.endEditing(true)
     }
 
-
-}
-
-extension CameraViewController : AVCapturePhotoCaptureDelegate {
-
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let imageData = photo.fileDataRepresentation() {
             let capturedImage = UIImage.init(data: imageData, scale: 1.0)
@@ -268,7 +265,6 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                 iView.contentMode = .scaleAspectFill
                 iView.image = image
                 iView.frame = UIScreen.main.bounds
-            
                 iView.clipsToBounds = true
                 iView.center = view.center
                 camPlaceholder.addSubview(iView)
@@ -276,6 +272,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
             }
         }
     }
+    
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if let error = error {
             // we got back an error!
@@ -288,6 +285,5 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
             present(ac, animated: true)
         }
     }
-
 }
 

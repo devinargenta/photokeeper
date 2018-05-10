@@ -15,7 +15,7 @@ class PhotoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       //
+
         title = imageTitle
         view.backgroundColor = .black
         if image != nil {
@@ -29,9 +29,9 @@ class PhotoViewController: UIViewController {
         } else {
             view.backgroundColor = UIColor(hue: 0.5722, saturation: 0.73, brightness: 0.82, alpha: 1.0) /* #388ed1 */
         }
-        // Do any additional setup after loading the view.
-        
-        let tl = UILabel(frame: CGRect(x: 40, y: view.frame.width + 40, width: view.frame.width - 40, height: 40))
+
+            
+        let tl = UILabel(frame: CGRect(x: 20, y: view.frame.width + 40, width: view.frame.width - 40, height: 40))
         tl.textColor = .white
         tl.text = imageTitle
 
@@ -41,7 +41,7 @@ class PhotoViewController: UIViewController {
         tl.backgroundColor = .red
         view.addSubview(tl)
         
-        let dl = UILabel(frame: CGRect(x: 40, y: tl.frame.origin.y + tl.frame.size.height + 20, width: view.frame.width, height: 120))
+        let dl = UILabel(frame: CGRect(x: 20, y: tl.frame.origin.y + tl.frame.size.height + 20, width: view.frame.width - 40, height: 120))
         dl.text = imageDescription
         dl.numberOfLines = 0
         dl.backgroundColor = .blue
@@ -50,27 +50,11 @@ class PhotoViewController: UIViewController {
         dl.textColor = .white
 
         view.addSubview(dl)
-        
-        // kill me
-        
-        
-        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

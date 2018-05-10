@@ -8,43 +8,32 @@
 
 import UIKit
 
-
-struct Trash {
-    var title: String?
-    var description: String?
-    var image: UIImage?
-}
-
-
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-
-    private let reuseIdentifier = "PhotoCell"
     var data = [ImageObject]()
-    var backup = [Trash]()
-    let black = UIColor(hue: 0.5278, saturation: 0.9, brightness: 0.23, alpha: 1.0)
     var topBarHeight: CGFloat = 0
+    
+    private let reuseIdentifier = "PhotoCell"
+    let black = UIColor(hue: 0.5278, saturation: 0.9, brightness: 0.23, alpha: 1.0)
+    let INSET_SIZE: CGFloat = 5
     let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupNav()
         collectionView?.backgroundColor = .white
+        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+    }
     
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(showComposer))
-        
+    func setupNav() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(showCameraViewController))
         let navBar = navigationController?.navigationBar
         navBar?.barTintColor = .white
         navBar?.isTranslucent = false
         navBar?.tintColor = black
         navBar?.titleTextAttributes =  [NSAttributedStringKey.foregroundColor: black]
-        
-        
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
-        // Do any additional setup after loading the view.
     }
     
-    @objc func showComposer(){
+    @objc func showCameraViewController(){
         let cvc = CameraViewController()
         let nvc = UINavigationController(rootViewController: cvc)
         present(nvc, animated: true, completion: nil)
@@ -54,10 +43,10 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: UICollectionViewDataSource
-
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didSelectItemAt indexPath: IndexPath) {
         let item = data[indexPath.row]
         let pvc = PhotoViewController()
         let imageName = data[indexPath.row].fileName
@@ -69,75 +58,69 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
-
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        
+    
+    override func collectionView(_ collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int {
         return data.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        cell.backgroundColor = black
         let imageName = data[indexPath.row].fileName
-        print(imageName)
         let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
-        print(imagePath)
-
         if FileManager.default.fileExists(atPath: imagePath.path) {
-            print("hey")
             let image = UIImage(contentsOfFile: imagePath.path)
             let iv = UIImageView(image: image)
             iv.contentMode = .scaleAspectFill
             cell.clipsToBounds = true
             iv.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height)
-        
-           // iv.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
             cell.backgroundView = iv
-           // cell.contentView.addSubview(iv)
         }
- 
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let sq = (view.frame.width - 60) / 3
+        
+        // UH LOL... width of thing, 4 gaps ( outer insets + 2 between the items )  divided by 3 items
+        let sq = (view.frame.width - (INSET_SIZE * 4)) / 3
         return CGSize(width: sq, height: sq)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 15
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return INSET_SIZE
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 15
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return INSET_SIZE
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+
+        return UIEdgeInsets(top: INSET_SIZE, left: INSET_SIZE, bottom: INSET_SIZE, right: INSET_SIZE)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        // lets recapture all the data
         if let storedImages = UserDefaults.standard.array(forKey: "storedImages") {
-            data = [ImageObject]()
-            for item in storedImages {
-                if let image = try? JSONDecoder().decode(ImageObject.self, from: item as! Data) {
-                    data.insert(image, at: 0)
-                }
-            }
+            // reset the data if we have any ( easier logic rn)
+            data = storedImages.compactMap{ (item: Any) -> ImageObject in
+                return try! JSONDecoder().decode(ImageObject.self, from: item as! Data)
+            }.reversed()
         }
-
+        // reload baby
         collectionView?.reloadData()
-        
     }
 
 }
