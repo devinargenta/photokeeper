@@ -8,17 +8,31 @@
 
 import Foundation
 
-struct ImageObject: Codable {
+struct Image: Codable {
     var fileName: String // idk if this works
     var title: String!
     var description: String!
 }
 
-class Images {
-    var images = [ImageObject]()
-    func setImages(newImages: [Data]) -> Void {
-        self.images = newImages.compactMap{ (item: Any) -> ImageObject in
-            return try! JSONDecoder().decode(ImageObject.self, from: item as! Data)
+class ImageStore {
+    // var images = [Image]()
+    let IMAGE_KEY_CONST = "storedImages"
+
+    func getStore() -> [Data] {
+        return UserDefaults.standard.array(forKey: IMAGE_KEY_CONST) as? [Data] ?? []
+    }
+    
+    func getImages() -> [Image] {
+        let savedImages = getStore()
+        return savedImages.compactMap{ (item: Data) -> Image in
+            return try! JSONDecoder().decode(Image.self, from: item )
+        }
+    }
+    func saveToStore(image: Image) -> Void {
+        if let encoded = try? JSONEncoder().encode(image) {
+            var savedImages = getStore()
+            savedImages.insert(encoded, at: 0)
+            UserDefaults.standard.set(savedImages, forKey: IMAGE_KEY_CONST)
         }
     }
 }

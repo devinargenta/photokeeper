@@ -15,7 +15,6 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var capturePhotoOutput: AVCapturePhotoOutput?
-
     // MARK: UI Stuff
     // store this instance here cuz im finna mount a cam view in here
     let image = UIImage()
@@ -26,6 +25,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
     let descriptionField = UITextView()
     let submitButton = UIButton()
     let iView = UIImageView()
+    let store = ImageStore()
     // MARK: colors
     let blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
 
@@ -196,7 +196,6 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         // get the documents directory url
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let uniqueString = ProcessInfo.processInfo.globallyUniqueString
-        let defaults = UserDefaults.standard
         let fileName = "image-\(uniqueString)"
         // create the destination file url to save your image
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
@@ -207,12 +206,8 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                 // writes the image data to disk
                 try data.write(to: fileURL)
                 // store the path && info in our data
-                let imageObj = ImageObject(fileName: fileName, title: titleField.text, description: descriptionField.text)
-                if let encoded = try? JSONEncoder().encode(imageObj) {
-                    var savedImages = defaults.array(forKey: "storedImages") as? [Data] ?? []
-                    savedImages.append(encoded)
-                    defaults.set(savedImages, forKey: "storedImages")
-                }
+                let imageObj = Image(fileName: fileName, title: titleField.text, description: descriptionField.text)
+                store.saveToStore(image: imageObj)
                 closeView()
             } catch {
                 print("error saving file:", error)
