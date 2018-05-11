@@ -11,12 +11,13 @@ import AVFoundation
 
 class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
     
-    // MARK: av capture shit
+    var store = ImageStore.shared
+
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var capturePhotoOutput: AVCapturePhotoOutput?
+    
     // MARK: UI Stuff
-    // store this instance here cuz im finna mount a cam view in here
     let image = UIImage()
     let camPlaceholder = UIView()
     let metaForm = UIView()
@@ -25,7 +26,7 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
     let descriptionField = UITextView()
     let submitButton = UIButton()
     let iView = UIImageView()
-    let store = ImageStore()
+
     // MARK: colors
     let blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
 
@@ -195,8 +196,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         // https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults
         // get the documents directory url
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let uniqueString = ProcessInfo.processInfo.globallyUniqueString
-        let fileName = "image-\(uniqueString)"
+        let fileName = "image-\(Date().timeIntervalSince1970)"
         // create the destination file url to save your image
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
         // get your UIImage jpeg data representation and check if the destination file url already exists
@@ -207,7 +207,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                 try data.write(to: fileURL)
                 // store the path && info in our data
                 let imageObj = Image(fileName: fileName, title: titleField.text, description: descriptionField.text)
-                store.saveToStore(image: imageObj)
+                store.addImageToStore(image: imageObj)
                 closeView()
             } catch {
                 print("error saving file:", error)
@@ -233,8 +233,9 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
     }
     
     func handleKeyboardEvents() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        let defaultNFC = NotificationCenter.default
+        defaultNFC.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        defaultNFC.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -277,6 +278,9 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         }
     }
     
+    /*
+     // MARK: save image to disk
+     // NOTE: not using currently
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         if let error = error {
             // we got back an error!
@@ -289,5 +293,6 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
             present(ac, animated: true)
         }
     }
+    */
 }
 

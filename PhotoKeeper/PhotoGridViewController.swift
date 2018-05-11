@@ -9,8 +9,7 @@
 import UIKit
 
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    
-    var store = ImageStore()
+    var store = ImageStore.shared
     var images = [Image]()
     var topBarHeight: CGFloat = 0
     
@@ -115,7 +114,7 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // lets recapture all the data
-        images = store.getImages()
+        images = store.images
         collectionView?.reloadData()
     }
 

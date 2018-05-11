@@ -18,19 +18,16 @@ class PhotoViewController: UIViewController {
 
         title = imageTitle
         view.backgroundColor = .black
-        if image != nil {
-            let imageView = UIImageView()
-            view.clipsToBounds = true
-            imageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-            imageView.contentMode = .scaleAspectFill
-            imageView.image = image
-            imageView.clipsToBounds = true
-            view.addSubview(imageView)
-        } else {
-            view.backgroundColor = UIColor(hue: 0.5722, saturation: 0.73, brightness: 0.82, alpha: 1.0) /* #388ed1 */
-        }
-
-            
+        
+    
+        let iv = UIImageView()
+        view.clipsToBounds = true
+        iv.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
+        iv.contentMode = .scaleAspectFill
+        iv.image = image
+        iv.clipsToBounds = true
+        view.addSubview(iv)
+        
         let tl = UILabel(frame: CGRect(x: 20, y: view.frame.width + 40, width: view.frame.width - 40, height: 40))
         tl.textColor = .white
         tl.text = imageTitle

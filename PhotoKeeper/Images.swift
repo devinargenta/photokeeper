@@ -15,24 +15,46 @@ struct Image: Codable {
 }
 
 class ImageStore {
-    // var images = [Image]()
-    let IMAGE_KEY_CONST = "storedImages"
-
-    func getStore() -> [Data] {
-        return UserDefaults.standard.array(forKey: IMAGE_KEY_CONST) as? [Data] ?? []
-    }
+    // singleton
+    static let shared = ImageStore()
     
-    func getImages() -> [Image] {
+    private let IMAGE_KEY_CONST = "storedImages"
+    private let defaults = UserDefaults.standard
+    private func getStore() -> [Data] {
+        return defaults.array(forKey: IMAGE_KEY_CONST) as? [Data] ?? []
+    }
+
+    // no set
+    public var images: [Image] {
         let savedImages = getStore()
         return savedImages.compactMap{ (item: Data) -> Image in
             return try! JSONDecoder().decode(Image.self, from: item )
         }
     }
-    func saveToStore(image: Image) -> Void {
+    
+    public func clearCache() {
+        defaults.removeObject(forKey: IMAGE_KEY_CONST)
+        defaults.synchronize()
+    }
+    
+    /*
+        this is potentailly fucky
+ 
+    */
+    public func removeImageFromStore(image: Image) -> Void {
+        var savedImages = getStore()
+        if let i = images.index(where: {
+            image.fileName == $0.fileName
+        }) {
+            savedImages.remove(at: i)
+            defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
+        }
+    }
+    public func addImageToStore(image: Image) -> Void {
         if let encoded = try? JSONEncoder().encode(image) {
             var savedImages = getStore()
             savedImages.insert(encoded, at: 0)
-            UserDefaults.standard.set(savedImages, forKey: IMAGE_KEY_CONST)
+            defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
         }
     }
 }
