@@ -50,7 +50,16 @@ class PhotoKeeperTests: XCTestCase {
         XCTAssertTrue(store.images.count == 1)
         store.addImageToStore(image: image)
         XCTAssertTrue(store.images.count == 2)
+    }
+    
+    func testStoredImages() {
+        let image = Image(fileName: "help", title: "me", description: "now")
+        store.addImageToStore(image: image)
         
+        var images = store.images
+        XCTAssertTrue(images[0].fileName == image.fileName)
+        XCTAssertTrue(images[0].title == image.title)
+        XCTAssertTrue(images[0].description == image.description)
     }
     
     func testRemoveItemFromStore() {
@@ -98,12 +107,5 @@ class PhotoKeeperTests: XCTestCase {
         XCTAssertTrue(store.images.count == 0)
         
     }
-    
-//    func testPerformanceExample() {
-//        // This is an example of a performance test case.
-//        self.measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
     
 }

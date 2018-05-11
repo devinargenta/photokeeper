@@ -1,5 +1,5 @@
 //
-//  Structs.swift
+//  ImageStore.swift
 //  PhotoKeeper
 //
 //  Created by Devin Argenta on 5/8/18.

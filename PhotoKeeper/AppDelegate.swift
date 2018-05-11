@@ -22,12 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let layout = UICollectionViewFlowLayout()
         let pgvc = PhotoGridViewController(collectionViewLayout: layout)
         let nav = UINavigationController(rootViewController: pgvc)
-        
-        
         win.rootViewController = nav
-        
         win.makeKeyAndVisible()
-        
         window = win
         
         return true
