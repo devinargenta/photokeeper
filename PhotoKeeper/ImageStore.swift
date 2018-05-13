@@ -10,8 +10,15 @@ import Foundation
 
 struct Image: Codable {
     var fileName: String // idk if this works
-    var title: String!
-    var description: String!
+    var title: String?
+    var description: String?
+    var dateAdded: Date
+    init(fileName: String, title: String? = nil, description: String? = nil) {
+        self.fileName = fileName
+        self.title = title
+        self.description = description
+        self.dateAdded = Date()
+    }
 }
 
 class ImageStore {
