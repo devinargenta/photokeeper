@@ -34,8 +34,11 @@ class ImageStore {
     // no set
     public var images: [Image] {
         let savedImages = getStore()
-        return savedImages.compactMap{ (item: Data) -> Image in
-            return try! JSONDecoder().decode(Image.self, from: item )
+        return savedImages.compactMap{ (item: Data) -> Image? in
+            if let item =  try? JSONDecoder().decode(Image.self, from: item ) {
+                return item
+            }
+            return nil
         }
     }
     
