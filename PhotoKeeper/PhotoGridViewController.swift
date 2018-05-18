@@ -9,8 +9,8 @@
 import UIKit
 
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    var store = ImageStore.shared
-    var images = [Image]()
+    var store = PhotoStore.shared
+    var images = [Photo]()
     var topBarHeight: CGFloat = 0
     
     private let reuseIdentifier = "PhotoCell"

@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct Image: Codable {
+// toog eneric // refactor??
+struct Photo: Codable {
     var fileName: String // idk if this works
     var title: String?
     var description: String?
@@ -21,9 +22,9 @@ struct Image: Codable {
     }
 }
 
-class ImageStore {
+class PhotoStore {
     // singleton
-    static let shared = ImageStore()
+    static let shared = PhotoStore()
     
     private let IMAGE_KEY_CONST = "storedImages"
     private let defaults = UserDefaults.standard
@@ -32,10 +33,10 @@ class ImageStore {
     }
 
     // no set
-    public var images: [Image] {
+    public var images: [Photo] {
         let savedImages = getStore()
-        return savedImages.compactMap{ (item: Data) -> Image? in
-            if let item =  try? JSONDecoder().decode(Image.self, from: item ) {
+        return savedImages.compactMap{ (item: Data) -> Photo? in
+            if let item =  try? JSONDecoder().decode(Photo.self, from: item ) {
                 return item
             }
             return nil
@@ -51,7 +52,7 @@ class ImageStore {
         this is potentailly fucky
  
     */
-    public func removeImageFromStore(image: Image) -> Void {
+    public func removeImageFromStore(image: Photo) -> Void {
         var savedImages = getStore()
         if let i = images.index(where: {
             image.fileName == $0.fileName
@@ -60,7 +61,7 @@ class ImageStore {
             defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
         }
     }
-    public func addImageToStore(image: Image) -> Void {
+    public func addImageToStore(image: Photo) -> Void {
         if let encoded = try? JSONEncoder().encode(image) {
             var savedImages = getStore()
             savedImages.insert(encoded, at: 0)

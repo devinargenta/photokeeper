@@ -10,11 +10,11 @@ import XCTest
 @testable import PhotoKeeper
 
 class PhotoKeeperTests: XCTestCase {
-    var store: ImageStore!
+    var store: PhotoStore!
     override func setUp() {
 
         super.setUp()
-        store = ImageStore.shared
+        store = PhotoStore.shared
         store.clearCache()
         
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -29,7 +29,7 @@ class PhotoKeeperTests: XCTestCase {
     
     
     func testAddImageToStore() {
-        let image = Image(fileName: "help", title: "me", description: "now")
+        let image = Photo(fileName: "help", title: "me", description: "now")
         store.addImageToStore(image: image)
         
         // image is in there
@@ -45,7 +45,7 @@ class PhotoKeeperTests: XCTestCase {
     }
     
     func testImageCount() {
-        let image = Image(fileName: "help", title: "me", description: "now")
+        let image = Photo(fileName: "help", title: "me", description: "now")
         store.addImageToStore(image: image)
         XCTAssertTrue(store.images.count == 1)
         store.addImageToStore(image: image)
@@ -53,7 +53,7 @@ class PhotoKeeperTests: XCTestCase {
     }
     
     func testStoredImages() {
-        let image = Image(fileName: "help", title: "me", description: "now")
+        let image = Photo(fileName: "help", title: "me", description: "now")
         store.addImageToStore(image: image)
         
         var images = store.images
@@ -63,15 +63,15 @@ class PhotoKeeperTests: XCTestCase {
     }
     
     func testRemoveItemFromStore() {
-        let image = Image(fileName: "help", title: "me", description: "now")
+        let image = Photo(fileName: "help", title: "me", description: "now")
         store.addImageToStore(image: image)
         XCTAssertTrue(store.images.count == 1)
         XCTAssertTrue(store.images.contains(where: {
             $0.fileName == image.fileName
         }))
         
-        let image2 = Image(fileName: "help again", title: "me", description: "now")
-        let image3 = Image(fileName: "help again", title: "me", description: "now")
+        let image2 = Photo(fileName: "help again", title: "me", description: "now")
+        let image3 = Photo(fileName: "help again", title: "me", description: "now")
         store.addImageToStore(image: image2)
         store.addImageToStore(image: image3)
         XCTAssertTrue(store.images.count == 3)
@@ -85,11 +85,11 @@ class PhotoKeeperTests: XCTestCase {
     
     func testSingleStore() {
         // add an image to the first store
-        let image = Image(fileName: "help", title: "me", description: "now")
+        let image = Photo(fileName: "help", title: "me", description: "now")
         store.addImageToStore(image: image)
         
-        let store1 = ImageStore.shared
-        let store2 = ImageStore.shared
+        let store1 = PhotoStore.shared
+        let store2 = PhotoStore.shared
         
         XCTAssertTrue(store1.images.count == 1)
         XCTAssertTrue(store2.images.count == 1)
@@ -97,7 +97,7 @@ class PhotoKeeperTests: XCTestCase {
     }
     
     func testClearCache() {
-        let image = Image(fileName: "help", title: "me", description: "now")
+        let image = Photo(fileName: "help", title: "me", description: "now")
         store.addImageToStore(image: image)
         XCTAssertTrue(store.images.count == 1)
         
