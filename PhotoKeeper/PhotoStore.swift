@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct Image: Codable {
+// toog eneric // refactor??
+struct Photo: Codable {
     var fileName: String // idk if this works
     var title: String?
     var description: String?
@@ -21,9 +22,9 @@ struct Image: Codable {
     }
 }
 
-class ImageStore {
+class PhotoStore {
     // singleton
-    static let shared = ImageStore()
+    static let shared = PhotoStore()
     
     private let IMAGE_KEY_CONST = "storedImages"
     private let defaults = UserDefaults.standard
@@ -32,10 +33,10 @@ class ImageStore {
     }
 
     // no set
-    public var images: [Image] {
-        let savedImages = getStore()
-        return savedImages.compactMap{ (item: Data) -> Image? in
-            if let item =  try? JSONDecoder().decode(Image.self, from: item ) {
+    public var photos: [Photo] {
+        let savedPhotos = getStore()
+        return savedPhotos.compactMap{ (item: Data) -> Photo? in
+            if let item =  try? JSONDecoder().decode(Photo.self, from: item ) {
                 return item
             }
             return nil
@@ -51,20 +52,20 @@ class ImageStore {
         this is potentailly fucky
  
     */
-    public func removeImageFromStore(image: Image) -> Void {
-        var savedImages = getStore()
-        if let i = images.index(where: {
+    public func removePhotoFromStore(image: Photo) -> Void {
+        var savedPhotos = getStore()
+        if let i = photos.index(where: {
             image.fileName == $0.fileName
         }) {
-            savedImages.remove(at: i)
-            defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
+            savedPhotos.remove(at: i)
+            defaults.set(savedPhotos, forKey: IMAGE_KEY_CONST)
         }
     }
-    public func addImageToStore(image: Image) -> Void {
+    public func addPhotoToStore(image: Photo) -> Void {
         if let encoded = try? JSONEncoder().encode(image) {
-            var savedImages = getStore()
-            savedImages.insert(encoded, at: 0)
-            defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
+            var savedPhotos = getStore()
+            savedPhotos.insert(encoded, at: 0)
+            defaults.set(savedPhotos, forKey: IMAGE_KEY_CONST)
         }
     }
 }

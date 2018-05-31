@@ -18,7 +18,7 @@ class PhotoViewController: UIViewController {
 
         title = imageTitle
         view.backgroundColor = .black
-        
+    
     
         let iv = UIImageView()
         view.clipsToBounds = true
