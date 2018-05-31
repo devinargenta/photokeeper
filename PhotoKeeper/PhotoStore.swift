@@ -33,9 +33,9 @@ class PhotoStore {
     }
 
     // no set
-    public var images: [Photo] {
-        let savedImages = getStore()
-        return savedImages.compactMap{ (item: Data) -> Photo? in
+    public var photos: [Photo] {
+        let savedPhotos = getStore()
+        return savedPhotos.compactMap{ (item: Data) -> Photo? in
             if let item =  try? JSONDecoder().decode(Photo.self, from: item ) {
                 return item
             }
@@ -52,20 +52,20 @@ class PhotoStore {
         this is potentailly fucky
  
     */
-    public func removeImageFromStore(image: Photo) -> Void {
-        var savedImages = getStore()
-        if let i = images.index(where: {
+    public func removePhotoFromStore(image: Photo) -> Void {
+        var savedPhotos = getStore()
+        if let i = photos.index(where: {
             image.fileName == $0.fileName
         }) {
-            savedImages.remove(at: i)
-            defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
+            savedPhotos.remove(at: i)
+            defaults.set(savedPhotos, forKey: IMAGE_KEY_CONST)
         }
     }
-    public func addImageToStore(image: Photo) -> Void {
+    public func addPhotoToStore(image: Photo) -> Void {
         if let encoded = try? JSONEncoder().encode(image) {
-            var savedImages = getStore()
-            savedImages.insert(encoded, at: 0)
-            defaults.set(savedImages, forKey: IMAGE_KEY_CONST)
+            var savedPhotos = getStore()
+            savedPhotos.insert(encoded, at: 0)
+            defaults.set(savedPhotos, forKey: IMAGE_KEY_CONST)
         }
     }
 }

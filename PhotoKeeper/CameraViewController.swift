@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
+class CameraViewController: UIViewController {
     
     var store = PhotoStore.shared
 
@@ -20,7 +20,8 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
     let snappyBoi = UIButton()
 
     // MARK: colors
-    let blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
+    var blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
+    lazy var blueblackCG = blueblack.cgColor
 
     // MARK: the app
     override func viewDidLoad() {
@@ -47,8 +48,8 @@ class CameraViewController: UIViewController, UITextFieldDelegate, UITextViewDel
         sb.center.y = view.frame.height - (sbsize.height)
         sbl.cornerRadius = 0.5 * sb.bounds.size.width
         sbl.borderWidth = 1
-        sbl.borderColor = blueblack.cgColor
-        sbl.shadowColor = blueblack.cgColor
+        sbl.borderColor = blueblackCG
+        sbl.shadowColor = blueblackCG
         sbl.shadowOpacity = 0.9
         sbl.shadowOffset = CGSize(width: 2, height: 2)
         sbl.shadowRadius = 2

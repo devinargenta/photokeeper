@@ -18,8 +18,8 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
     let submitButton = UIButton()
     let iView = UIImageView()
     
-    // MARK: colors
     let blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
+    lazy var blueblackCG = blueblack.cgColor
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,14 +27,10 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         setupView()
         handleKeyboardEvents()
 
-
     }
     
     func setupView() {
         view.backgroundColor = .black
-//        navigationController?.navigationBar.barStyle = .blackTranslucent
-//        navigationController?.navigationBar.tintColor = .white
-    //    navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: ., target: self, action: #selector(back))
         let bg = UIImageView()
         bg.contentMode = .scaleAspectFill
         bg.image = image
@@ -45,13 +41,6 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         view.addSubview(bg)
         buildMetaForm()
     }
-    
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     
     func buildMetaForm() {
        // metaForm.backgroundColor = .white
@@ -87,7 +76,7 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         titleField.textColor = blueblack
         titleField.borderStyle = UITextBorderStyle.roundedRect // keep this for builtin padding / inset
         titleField.placeholder = ""
-        titleField.layer.borderColor = blueblack.cgColor
+        titleField.layer.borderColor = blueblackCG
         titleField.layer.borderWidth = 1
         titleField.layer.cornerRadius = 5
         titleField.autocorrectionType = .no
@@ -115,7 +104,7 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         descriptionField.layer.borderWidth = 1
         descriptionField.layer.cornerRadius = 5
         descriptionField.clipsToBounds = false
-        descriptionField.layer.borderColor =  blueblack.cgColor
+        descriptionField.layer.borderColor =  blueblackCG
         descriptionField.autocorrectionType = .no
         descriptionField.delegate = self
         descriptionField.keyboardType = .default
@@ -160,7 +149,6 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
     
     
     @objc func savePhoto() {
-        print("hey now, ur not an alstar")
         // https://stackoverflow.com/questions/32836862/how-to-use-writetofile-to-save-image-in-document-directory
         // https://www.hackingwithswift.com/example-code/system/how-to-save-user-settings-using-userdefaults
         // get the documents directory url
@@ -176,7 +164,7 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
                 try data.write(to: fileURL)
                 // store the path && info in our data
                 let imageObj = Photo(fileName: fileName, title: titleField.text, description: descriptionField.text)
-                store.addImageToStore(image: imageObj)
+                store.addPhotoToStore(image: imageObj)
                 closeView()
             } catch {
                 print("error saving file:", error)
@@ -187,7 +175,6 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
     }
     
     @objc func closeView() {
-        print("hey there")
         dismiss(animated: true, completion: nil)
        // navigationController?.popViewController(animated: true)
     }
@@ -197,14 +184,5 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         navigationController?.popViewController(animated: true)
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

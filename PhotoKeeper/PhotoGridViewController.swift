@@ -114,7 +114,7 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // lets recapture all the data
-        images = store.images
+        images = store.photos
         collectionView?.reloadData()
     }
 
