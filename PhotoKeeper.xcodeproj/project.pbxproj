@@ -7,7 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E0CF45D20C1AEF5008ABC4A /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3B020C0742F003C8983 /* RealmSwift.framework */; };
+		9E0CF45E20C1AEF7008ABC4A /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3AF20C0742F003C8983 /* Realm.framework */; };
 		9E61294320A22DD20007901D /* PhotoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E61294220A22DD20007901D /* PhotoStore.swift */; };
+		9E9CA3B120C0742F003C8983 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3AF20C0742F003C8983 /* Realm.framework */; };
+		9E9CA3B220C0742F003C8983 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3B020C0742F003C8983 /* RealmSwift.framework */; };
+		9E9CA3B420C0794F003C8983 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3AF20C0742F003C8983 /* Realm.framework */; };
+		9E9CA3B520C0794F003C8983 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3AF20C0742F003C8983 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9E9CA3B720C07950003C8983 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3B020C0742F003C8983 /* RealmSwift.framework */; };
+		9E9CA3B820C07950003C8983 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9E9CA3B020C0742F003C8983 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9EB1060520AE27D200B047BE /* PhotoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB1060420AE27D200B047BE /* PhotoPreviewViewController.swift */; };
 		9ECFBEF8209BA47400047B80 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECFBEF7209BA47400047B80 /* AppDelegate.swift */; };
 		9ECFBEFF209BA47600047B80 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9ECFBEFE209BA47600047B80 /* Assets.xcassets */; };
@@ -36,8 +44,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9E9CA3B620C0794F003C8983 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9E9CA3B820C07950003C8983 /* RealmSwift.framework in Embed Frameworks */,
+				9E9CA3B520C0794F003C8983 /* Realm.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		9E61294220A22DD20007901D /* PhotoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStore.swift; sourceTree = "<group>"; };
+		9E9CA3AF20C0742F003C8983 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
+		9E9CA3B020C0742F003C8983 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = Carthage/Build/iOS/RealmSwift.framework; sourceTree = "<group>"; };
 		9EB1060420AE27D200B047BE /* PhotoPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewViewController.swift; sourceTree = "<group>"; };
 		9ECFBEF4209BA47400047B80 /* PhotoKeeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoKeeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECFBEF7209BA47400047B80 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +85,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E9CA3B420C0794F003C8983 /* Realm.framework in Frameworks */,
+				9E9CA3B120C0742F003C8983 /* Realm.framework in Frameworks */,
+				9E9CA3B720C07950003C8983 /* RealmSwift.framework in Frameworks */,
+				9E9CA3B220C0742F003C8983 /* RealmSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +96,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E0CF45D20C1AEF5008ABC4A /* RealmSwift.framework in Frameworks */,
+				9E0CF45E20C1AEF7008ABC4A /* Realm.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +111,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9E9CA3AE20C0742F003C8983 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9E9CA3AF20C0742F003C8983 /* Realm.framework */,
+				9E9CA3B020C0742F003C8983 /* RealmSwift.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9ECFBEEB209BA47300047B80 = {
 			isa = PBXGroup;
 			children = (
@@ -87,6 +127,7 @@
 				9ECFBF0B209BA47600047B80 /* PhotoKeeperTests */,
 				9ECFBF16209BA47600047B80 /* PhotoKeeperUITests */,
 				9ECFBEF5209BA47400047B80 /* Products */,
+				9E9CA3AE20C0742F003C8983 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -144,6 +185,8 @@
 				9ECFBEF0209BA47300047B80 /* Sources */,
 				9ECFBEF1209BA47300047B80 /* Frameworks */,
 				9ECFBEF2209BA47300047B80 /* Resources */,
+				9E9CA3B320C0746A003C8983 /* carthage */,
+				9E9CA3B620C0794F003C8983 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -258,6 +301,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9E9CA3B320C0746A003C8983 /* carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/RealmSwift.framework",
+			);
+			name = carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9ECFBEF0209BA47300047B80 /* Sources */ = {
@@ -436,6 +498,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TM3VXQ389G;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PhotoKeeper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -454,6 +520,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = TM3VXQ389G;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PhotoKeeper/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -472,6 +542,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PhotoKeeperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -492,6 +566,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = PhotoKeeperTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -23,10 +23,8 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
         handleKeyboardEvents()
-
     }
     
     func setupView() {
@@ -163,8 +161,11 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
                 // writes the image data to disk
                 try data.write(to: fileURL)
                 // store the path && info in our data
-                let imageObj = Photo(fileName: fileName, title: titleField.text, description: descriptionField.text)
-                store.addPhotoToStore(image: imageObj)
+                let photo = PhotoObject()
+                photo.fileName = fileName
+                photo.title = titleField.text
+                photo.desc = descriptionField.text
+                store.addPhotoToStore(photo: photo)
                 closeView()
             } catch {
                 print("error saving file:", error)

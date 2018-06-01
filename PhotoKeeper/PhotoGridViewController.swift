@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import RealmSwift
 
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var store = PhotoStore.shared
-    var images = [Photo]()
+    var photos: Results<PhotoObject>!
     var topBarHeight: CGFloat = 0
     
     private let reuseIdentifier = "PhotoCell"
@@ -48,9 +49,9 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     // MARK: UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView,
                                  didSelectItemAt indexPath: IndexPath) {
-        let item = images[indexPath.row]
+        let item = photos[indexPath.row]
         let pvc = PhotoViewController()
-        let imageName = images[indexPath.row].fileName
+        let imageName = photos[indexPath.row].fileName
         let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
         pvc.image = UIImage(contentsOfFile: imagePath.path)
         pvc.imageTitle = item.title
@@ -64,13 +65,13 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        return images.count
+        return photos.count
     }
 
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        let imageName = images[indexPath.row].fileName
+        let imageName = photos[indexPath.row].fileName
         let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
         if FileManager.default.fileExists(atPath: imagePath.path) {
             let image = UIImage(contentsOfFile: imagePath.path)
@@ -114,7 +115,7 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // lets recapture all the data
-        images = store.photos
+        photos = store.photos
         collectionView?.reloadData()
     }
 

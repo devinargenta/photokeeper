@@ -112,18 +112,6 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         photoSettings.isAutoStillImageStabilizationEnabled = true
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
-//        // animate meta in
-//        UIView.animate(withDuration: 0.5, animations: { [weak self] in
-//            guard let strongSelf = self else { return }
-//            let mf = strongSelf.metaForm
-//            mf.alpha = 1
-//            mf.center.x = strongSelf.view.center.x
-//            strongSelf.submitButton.frame.origin.y = strongSelf.view.frame.height - 80
-//            }, completion: { [weak self] completed in
-//                guard let strongSelf = self else { return }
-//                strongSelf.titleField.becomeFirstResponder()
-//            })
-//    }
 
 
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {

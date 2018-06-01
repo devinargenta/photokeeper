@@ -7,65 +7,44 @@
 //
 
 import Foundation
+import RealmSwift
 
-// toog eneric // refactor??
-struct Photo: Codable {
-    var fileName: String // idk if this works
-    var title: String?
-    var description: String?
-    var dateAdded: Date
-    init(fileName: String, title: String? = nil, description: String? = nil) {
-        self.fileName = fileName
-        self.title = title
-        self.description = description
-        self.dateAdded = Date()
-    }
+// :Object is a realm class to overwrite
+class PhotoObject: Object {
+    @objc dynamic var fileName: String = "" // idk if this works
+    @objc dynamic var title: String?
+    @objc dynamic var desc: String?
+    @objc dynamic var dateAdded: Date = Date()
 }
 
 class PhotoStore {
     // singleton
     static let shared = PhotoStore()
-    
-    private let IMAGE_KEY_CONST = "storedImages"
-    private let defaults = UserDefaults.standard
-    private func getStore() -> [Data] {
-        return defaults.array(forKey: IMAGE_KEY_CONST) as? [Data] ?? []
+    let realm = try! Realm()
+    init(){
+        print(Realm.Configuration.defaultConfiguration.fileURL ?? "help")
     }
-
-    // no set
-    public var photos: [Photo] {
-        let savedPhotos = getStore()
-        return savedPhotos.compactMap{ (item: Data) -> Photo? in
-            if let item =  try? JSONDecoder().decode(Photo.self, from: item ) {
-                return item
-            }
-            return nil
-        }
+    
+    public var photos: Results<PhotoObject> {
+          return realm.objects(PhotoObject.self)
     }
     
     public func clearCache() {
-        defaults.removeObject(forKey: IMAGE_KEY_CONST)
-        defaults.synchronize()
-    }
-    
-    /*
-        this is potentailly fucky
- 
-    */
-    public func removePhotoFromStore(image: Photo) -> Void {
-        var savedPhotos = getStore()
-        if let i = photos.index(where: {
-            image.fileName == $0.fileName
-        }) {
-            savedPhotos.remove(at: i)
-            defaults.set(savedPhotos, forKey: IMAGE_KEY_CONST)
+        try! realm.write {
+            realm.deleteAll()
         }
     }
-    public func addPhotoToStore(image: Photo) -> Void {
-        if let encoded = try? JSONEncoder().encode(image) {
-            var savedPhotos = getStore()
-            savedPhotos.insert(encoded, at: 0)
-            defaults.set(savedPhotos, forKey: IMAGE_KEY_CONST)
+
+    public func removePhotoFromStore(photo: PhotoObject) -> Void {
+        try! realm.write {
+            realm.delete(photo)
+        }
+        
+    }
+
+    public func addPhotoToStore(photo: PhotoObject) -> Void {
+        try! realm.write {
+            realm.add(photo)
         }
     }
 }
