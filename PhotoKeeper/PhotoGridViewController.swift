@@ -49,13 +49,9 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     // MARK: UICollectionViewDataSource
     override func collectionView(_ collectionView: UICollectionView,
                                  didSelectItemAt indexPath: IndexPath) {
-        let item = photos[indexPath.row]
+        let photo = photos[indexPath.row]
         let pvc = PhotoViewController()
-        let imageName = photos[indexPath.row].fileName
-        let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
-        pvc.image = UIImage(contentsOfFile: imagePath.path)
-        pvc.imageTitle = item.title
-        pvc.imageDescription = item.description
+        pvc.photo = photo
         navigationController?.pushViewController(pvc, animated: true)
     }
     
@@ -71,8 +67,10 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        let imageName = photos[indexPath.row].fileName
-        let imagePath = documentsDirectory.appendingPathComponent("\(imageName)")
+        let photo = photos[indexPath.row]
+        let fileName = photo.fileName
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let imagePath = documentsDirectory.appendingPathComponent("\(fileName)")
         if FileManager.default.fileExists(atPath: imagePath.path) {
             let image = UIImage(contentsOfFile: imagePath.path)
             let iv = UIImageView(image: image)
@@ -81,8 +79,23 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
             iv.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height)
             cell.backgroundView = iv
         }
+        
+        /* hacky remove all the title content things idfk..... */
+        
+        for view in cell.contentView.subviews {
+            view.removeFromSuperview()
+        }
+
+        if photo.title != "" {
+            let metaicon = UIView(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
+            metaicon.backgroundColor = .white
+            cell.contentView.addSubview(metaicon)
+        }
+        
+        
         return cell
     }
+    
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -114,8 +127,7 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // lets recapture all the data
-        photos = store.photos
+        photos = store.photos.sorted(byKeyPath: "dateAdded", ascending: false)
         collectionView?.reloadData()
     }
 

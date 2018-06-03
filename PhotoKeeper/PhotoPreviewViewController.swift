@@ -14,7 +14,7 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
     var image = UIImage()
     let metaForm = UIView()
     let titleField = UITextField()
-    let descriptionField = UITextView()
+    let descField = UITextView()
     let submitButton = UIButton()
     let iView = UIImageView()
     
@@ -95,20 +95,20 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         descLabel.font = UIFont.systemFont(ofSize: 15)
         descLabel.text = "Description"
         
-        descriptionField.frame = CGRect(x: 0, y: 90, width: view.frame.width - 40, height: 100)
-        descriptionField.isEditable = true
-        descriptionField.font = UIFont.systemFont(ofSize: 15)
-        descriptionField.textColor = blueblack
-        descriptionField.layer.borderWidth = 1
-        descriptionField.layer.cornerRadius = 5
-        descriptionField.clipsToBounds = false
-        descriptionField.layer.borderColor =  blueblackCG
-        descriptionField.autocorrectionType = .no
-        descriptionField.delegate = self
-        descriptionField.keyboardType = .default
-        descriptionField.returnKeyType = .default
-        descriptionField.addSubview(descLabel)
-        return descriptionField
+        descField.frame = CGRect(x: 0, y: 90, width: view.frame.width - 40, height: 100)
+        descField.isEditable = true
+        descField.font = UIFont.systemFont(ofSize: 15)
+        descField.textColor = blueblack
+        descField.layer.borderWidth = 1
+        descField.layer.cornerRadius = 5
+        descField.clipsToBounds = false
+        descField.layer.borderColor =  blueblackCG
+        descField.autocorrectionType = .no
+        descField.delegate = self
+        descField.keyboardType = .default
+        descField.returnKeyType = .default
+        descField.addSubview(descLabel)
+        return descField
         
     }
     
@@ -137,14 +137,13 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
 
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        descriptionField.becomeFirstResponder()
+        descField.becomeFirstResponder()
         return false
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-    
     
     @objc func savePhoto() {
         // https://stackoverflow.com/questions/32836862/how-to-use-writetofile-to-save-image-in-document-directory
@@ -161,10 +160,9 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
                 // writes the image data to disk
                 try data.write(to: fileURL)
                 // store the path && info in our data
-                let photo = PhotoObject()
-                photo.fileName = fileName
-                photo.title = titleField.text
-                photo.desc = descriptionField.text
+                let tfText = titleField.text
+                let dfText = descField.text
+                let photo = PhotoObject(value: ["fileName": fileName, "title": tfText, "desc":  dfText])
                 store.addPhotoToStore(photo: photo)
                 closeView()
             } catch {
@@ -174,7 +172,7 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
             print("what is goign on here")
         }
     }
-    
+
     @objc func closeView() {
         dismiss(animated: true, completion: nil)
        // navigationController?.popViewController(animated: true)
@@ -184,6 +182,10 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         //dismiss(animated: true, completion: nil)
         navigationController?.popViewController(animated: true)
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.titleField.becomeFirstResponder()
+    }
 
 }

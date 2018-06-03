@@ -12,8 +12,8 @@ import RealmSwift
 // :Object is a realm class to overwrite
 class PhotoObject: Object {
     @objc dynamic var fileName: String = "" // idk if this works
-    @objc dynamic var title: String?
-    @objc dynamic var desc: String?
+    @objc dynamic var title: String? = nil
+    @objc dynamic var desc: String? = nil
     @objc dynamic var dateAdded: Date = Date()
 }
 
@@ -36,8 +36,14 @@ class PhotoStore {
     }
 
     public func removePhotoFromStore(photo: PhotoObject) -> Void {
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let imagePath = documentsDirectory.appendingPathComponent("\(photo.fileName)")
         try! realm.write {
             realm.delete(photo)
+            
+        }
+        if FileManager.default.fileExists(atPath: imagePath.path) {
+                try! FileManager.default.removeItem(atPath: imagePath.path)
         }
         
     }
