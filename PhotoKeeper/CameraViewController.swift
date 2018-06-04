@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 class CameraViewController: UIViewController {
-    
+
     var store = PhotoStore.shared
 
     var captureSession: AVCaptureSession?
@@ -33,12 +33,13 @@ class CameraViewController: UIViewController {
         view.backgroundColor = .white
         navigationController?.navigationBar.barStyle = .blackTranslucent
         navigationController?.navigationBar.tintColor = .white
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeView))
+        navigationItem.leftBarButtonItem =
+            UIBarButtonItem(barButtonSystemItem: .stop, target: self, action: #selector(closeView))
         buildCameraButton()
         initializeCaptureDevice()
     }
 
-    
+
     func buildCameraButton(){
         let sb = snappyBoi
         let sbl = sb.layer
@@ -62,35 +63,35 @@ class CameraViewController: UIViewController {
     }
 }
 
-extension CameraViewController : AVCapturePhotoCaptureDelegate {
-    
+extension CameraViewController: AVCapturePhotoCaptureDelegate {
+
     func initializeCaptureDevice() {
-        
+
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else {
             fatalError("No video device found")
         }
-        
+
         do {
             let input = try AVCaptureDeviceInput(device: captureDevice)
-            
+
             captureSession = AVCaptureSession()
             captureSession?.sessionPreset = AVCaptureSession.Preset.photo
             captureSession?.addInput(input)
-            
+
             // Get an instance of ACCapturePhotoOutput class
             capturePhotoOutput = AVCapturePhotoOutput()
             let settings = AVCapturePhotoSettings()
             settings.livePhotoVideoCodecType = .jpeg
             capturePhotoOutput?.isHighResolutionCaptureEnabled = true
-            
+
             if captureSession!.canAddOutput(capturePhotoOutput!) {
                 captureSession?.addOutput(capturePhotoOutput!)
             }
-            
+
             videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
             videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             videoPreviewLayer?.frame = view.layer.bounds
-            
+
             //start video capture
             view.layer.insertSublayer(videoPreviewLayer!, at: 0)
             captureSession?.startRunning()
@@ -98,12 +99,11 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
             print(error)
         }
     }
-    
+
     @objc func closeView() {
         dismiss(animated: true, completion: nil)
     }
 
-    
     @objc func takePhoto() {
         // take a  photo
         guard let capturePhotoOutput = self.capturePhotoOutput else { return }
@@ -112,7 +112,6 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         photoSettings.isAutoStillImageStabilizationEnabled = true
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
-
 
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let imageData = photo.fileDataRepresentation() {
@@ -123,6 +122,3 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         }
     }
 }
-
-
-

@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import RealmSwift
 @testable import PhotoKeeper
 
 class PhotoKeeperTests: XCTestCase {
@@ -15,18 +16,17 @@ class PhotoKeeperTests: XCTestCase {
         super.setUp()
         store = PhotoStore.shared
         store.clearCache()
-        
+
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
-    
+
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         store.clearCache()
         super.tearDown()
-        
     }
-    
-//    
+
+//
     func testAddImageToStore() {
         let photo = PhotoObject(value: ["fileName": "help", "title": "me", "desc": "now"])
         store.addPhotoToStore(photo: photo)
@@ -34,14 +34,14 @@ class PhotoKeeperTests: XCTestCase {
         XCTAssertTrue(store.photos.contains(where: {
            $0.fileName == photo.fileName
         }))
-        
+
         // nothing weird in there
         XCTAssertFalse(store.photos.contains(where: {
             $0.fileName == "oh good lord im not in there"
         }))
 
     }
-    
+
     func testImageCount() {
         let p1 =  PhotoObject(value: ["fileName": "help again", "title": "me", "description": "now"])
         store.addPhotoToStore(photo: p1)
@@ -102,5 +102,5 @@ class PhotoKeeperTests: XCTestCase {
         XCTAssertTrue(store.photos.count == 0)
 
     }
-    
+
 }
