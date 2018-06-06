@@ -11,13 +11,19 @@ import RealmSwift
 
 class PhotoGridViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var store = PhotoStore.shared
-    var photos: Results<PhotoObject>!
+    var photos: Results<PhotoObject> {
+        return store.photos.sorted(byKeyPath: "dateAdded", ascending: false)
+    }
     var topBarHeight: CGFloat = 0
-
     let reuseIdentifier = "PhotoCell"
     let black = UIColor(hue: 0.5278, saturation: 0.9, brightness: 0.23, alpha: 1.0)
-    let INSET: CGFloat = 5
-
+    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    
+    private struct Layout {
+        static let insetSize: CGFloat = 5
+        static let insets = UIEdgeInsets(top: insetSize, left: insetSize, bottom: insetSize, right: insetSize)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNav()
@@ -63,24 +69,20 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         let photo = photos[indexPath.row]
-        let photoPath = store.getPathForPhoto(photo)
-        if FileManager.default.fileExists(atPath: photoPath) {
-            let image = UIImage(contentsOfFile: photoPath)
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFill
-            cell.clipsToBounds = true
-            imageView.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height)
-            cell.backgroundView = imageView
-        }
-
+        let image = store.getUIImageFromPhoto(photo: photo)
+        let iv = UIImageView(image: image)
+        iv.contentMode = .scaleAspectFill
+        cell.clipsToBounds = true
+        iv.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height)
+        cell.backgroundView = iv
         /* hacky remove all the title content things idfk..... */
 
         for view in cell.contentView.subviews {
             view.removeFromSuperview()
         }
 
-        if photo.title != "" {
-            let metaicon = UIImageView(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
+        if photo.title?.isEmpty == false {
+            let metaicon = UIView(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
             metaicon.backgroundColor = .white
             cell.contentView.addSubview(metaicon)
         }
@@ -91,34 +93,31 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        // UH LOL... width of thing, 4 gaps ( outer insets + 2 between the items )  dimageViewided by 3 items
-        let size = (view.frame.width - (INSET * 4)) / 3
+        let size = (view.frame.width - (Layout.insetSize * 4)) / 3
         return CGSize(width: size, height: size)
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return INSET
+        return Layout.insetSize
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return INSET
+        return Layout.insetSize
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
 
-        return UIEdgeInsets(top: INSET, left: INSET, bottom: INSET, right: INSET)
+        return Layout.insets
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        photos = store.photos.sorted(byKeyPath: "dateAdded", ascending: false)
         collectionView?.reloadData()
     }
 

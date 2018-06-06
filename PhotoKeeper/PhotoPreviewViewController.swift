@@ -16,26 +16,22 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
     let titleField = UITextField()
     let descField = UITextView()
     let submitButton = UIButton()
-    let iView = UIImageView()
 
     let blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
     lazy var blueblackCG = blueblack.cgColor
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
         setupView()
         handleKeyboardEvents()
     }
 
     func setupView() {
-        view.backgroundColor = .black
         let bgView = UIImageView()
         bgView.contentMode = .scaleAspectFill
         bgView.image = image
         bgView.frame = UIScreen.main.bounds
-        bgView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
-        bgView.clipsToBounds = true
-
         view.addSubview(bgView)
         buildMetaForm()
     }
@@ -49,8 +45,7 @@ class PhotoPreviewViewController: UIViewController, UITextFieldDelegate, UITextV
         let df = buildDescriptionField()
 
         // MARK: submit button
-        submitButton.frame = CGRect(x: 0, y: metaForm.frame.height - 50, width: view.frame.width / 2 - 10, height: 50)
-        submitButton.center.x = view.frame.width - submitButton.frame.width
+        submitButton.frame = CGRect(x: 20, y: metaForm.frame.height - 50, width: view.frame.width - 40, height: 50)
         submitButton.setTitle("Save", for: .normal)
         submitButton.backgroundColor = .red
         submitButton.setTitleColor(.white, for: .normal)

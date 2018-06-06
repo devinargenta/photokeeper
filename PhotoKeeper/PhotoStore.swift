@@ -6,6 +6,7 @@
 //  Copyright © 2018 Devin Argenta. All rights reserved.
 //
 
+import UIKit
 import Foundation
 import RealmSwift
 
@@ -33,6 +34,20 @@ class PhotoStore {
         try! realm.write {
             realm.deleteAll()
         }
+    }
+    
+    /*
+     idk about this
+     */
+    public func getUIImageFromPhoto(photo: PhotoObject) -> UIImage {
+        let image = UIImage()
+        let imagePath = getPathForPhoto(photo)
+        if FileManager.default.fileExists(atPath: imagePath) {
+            if let image = UIImage(contentsOfFile: imagePath) {
+                return image
+            }
+        }
+        return image
     }
 
     public func getPathForPhoto(_ photo: PhotoObject) -> String {

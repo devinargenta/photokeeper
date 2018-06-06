@@ -11,21 +11,25 @@ import UIKit
 class PhotoViewController: UIViewController {
 
     let store = PhotoStore.shared
-    var photo: PhotoObject!
-
+    weak var photo: PhotoObject? {
+        didSet {
+            guard let photo = photo else { return }
+            let photoPath = store.getPathForPhoto(photo)
+            title = photo.title
+            let imageView = UIImageView()
+            imageView.frame = view.bounds
+            imageView.contentMode = .scaleAspectFill
+            imageView.image = UIImage(contentsOfFile: photoPath)
+            imageView.clipsToBounds = true
+            view.addSubview(imageView)
+            // set image in image view
+            buildMetaDataView()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let photoPath = store.getPathForPhoto(photo)
-        title = photo.title
-        view.backgroundColor = .black
 
-        let iv = UIImageView()
-        view.clipsToBounds = true
-        iv.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        iv.contentMode = .scaleAspectFill
-        iv.image = UIImage(contentsOfFile: photoPath)
-        iv.clipsToBounds = true
-        view.addSubview(iv)
 
         navigationItem.rightBarButtonItem =
             UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(deletePhoto))
@@ -41,7 +45,7 @@ class PhotoViewController: UIViewController {
 
         // Create OK button with action handler
         let ok = UIAlertAction(title: "OK", style: .default, handler: { _ -> Void in
-            self.store.removePhotoFromStore(photo: self.photo)
+            self.store.removePhotoFromStore(photo: self.photo!)
             self.navigationController?.popViewController(animated: true)
         })
 
@@ -60,8 +64,8 @@ class PhotoViewController: UIViewController {
     }
 
     func buildMetaDataView() {
-        let photoTitle = photo.title
-        let photoDesc = photo.desc
+        let photoTitle = photo?.title
+        let photoDesc = photo?.desc
 
         let tl = UILabel(frame: CGRect(x: 20, y: view.frame.width + 40, width: view.frame.width - 40, height: 40))
         tl.textColor = .white

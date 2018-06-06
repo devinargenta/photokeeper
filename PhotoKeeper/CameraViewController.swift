@@ -17,7 +17,7 @@ class CameraViewController: UIViewController {
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var capturePhotoOutput: AVCapturePhotoOutput?
 
-    let snappyBoi = UIButton()
+    let cameraButton = UIButton()
 
     // MARK: colors
     var blueblack = UIColor(hue: 0.6333, saturation: 0.15, brightness: 0.64, alpha: 1.0)
@@ -41,25 +41,24 @@ class CameraViewController: UIViewController {
 
 
     func buildCameraButton(){
-        let sb = snappyBoi
-        let sbl = sb.layer
-        sb.frame = CGRect(x: 0, y: 0, width: 65, height: 65)
-        let sbsize = sb.bounds.size
-        sb.center.x = view.frame.width - (sbsize.width)
-        sb.center.y = view.frame.height - (sbsize.height)
-        sbl.cornerRadius = 0.5 * sb.bounds.size.width
-        sbl.borderWidth = 1
-        sbl.borderColor = blueblackCG
-        sbl.shadowColor = blueblackCG
-        sbl.shadowOpacity = 0.9
-        sbl.shadowOffset = CGSize(width: 2, height: 2)
-        sbl.shadowRadius = 2
-        sbl.shadowPath = UIBezierPath(roundedRect: sb.bounds, cornerRadius: 0.5 * sbsize.width).cgPath
-        sb.backgroundColor = .white
-        sb.setTitle("+", for: .normal)
-        sb.setTitleColor(blueblack, for: .normal)
-        sb.addTarget(self, action: #selector(takePhoto), for: UIControlEvents.touchUpInside)
-        view.addSubview(sb)
+        let camButtonLayer = cameraButton.layer
+        cameraButton.frame = CGRect(x: 0, y: 0, width: 65, height: 65)
+        let sbsize = cameraButton.bounds.size
+        cameraButton.center.x = view.frame.width - (sbsize.width)
+        cameraButton.center.y = view.frame.height - (sbsize.height)
+        camButtonLayer.cornerRadius = 0.5 * cameraButton.bounds.size.width
+        camButtonLayer.borderWidth = 1
+        camButtonLayer.borderColor = blueblackCG
+        camButtonLayer.shadowColor = blueblackCG
+        camButtonLayer.shadowOpacity = 0.9
+        camButtonLayer.shadowOffset = CGSize(width: 2, height: 2)
+        camButtonLayer.shadowRadius = 2
+        camButtonLayer.shadowPath = UIBezierPath(roundedRect: cameraButton.bounds, cornerRadius: 0.5 * sbsize.width).cgPath
+        cameraButton.backgroundColor = .white
+        cameraButton.setTitle("+", for: .normal)
+        cameraButton.setTitleColor(blueblack, for: .normal)
+        cameraButton.addTarget(self, action: #selector(takePhoto), for: UIControlEvents.touchUpInside)
+        view.addSubview(cameraButton)
     }
 }
 
