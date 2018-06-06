@@ -45,7 +45,8 @@ class PhotoViewController: UIViewController {
 
         // Create OK button with action handler
         let ok = UIAlertAction(title: "OK", style: .default, handler: { _ -> Void in
-            self.store.removePhotoFromStore(photo: self.photo!)
+            guard let photo = self.photo else { return }
+            self.store.removePhotoFromStore(photo: photo)
             self.navigationController?.popViewController(animated: true)
         })
 
