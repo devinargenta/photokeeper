@@ -15,7 +15,6 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
         return store.photos.sorted(byKeyPath: "dateAdded", ascending: false)
     }
     var topBarHeight: CGFloat = 0
-    let reuseIdentifier = "PhotoCell"
     let black = UIColor(hue: 0.5278, saturation: 0.9, brightness: 0.23, alpha: 1.0)
     let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     
@@ -28,7 +27,7 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
         super.viewDidLoad()
         setupNav()
         collectionView?.backgroundColor = .white
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView?.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.id)
     }
 
     func setupNav() {
@@ -67,26 +66,12 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
 
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        let photo = photos[indexPath.row]
-        let image = store.getUIImageFromPhoto(photo: photo)
-        let iv = UIImageView(image: image)
-        iv.contentMode = .scaleAspectFill
-        cell.clipsToBounds = true
-        iv.frame = CGRect(x: 0, y: 0, width: cell.frame.width, height: cell.frame.height)
-        cell.backgroundView = iv
-        /* hacky remove all the title content things idfk..... */
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.id, for: indexPath)
 
-        for view in cell.contentView.subviews {
-            view.removeFromSuperview()
+        if let cell = cell as? PhotoCell {
+            cell.data = photos[indexPath.row]
         }
-
-        if photo.title?.isEmpty == false {
-            let metaicon = UIView(frame: CGRect(x: 20, y: 20, width: 20, height: 20))
-            metaicon.backgroundColor = .white
-            cell.contentView.addSubview(metaicon)
-        }
-
+        
         return cell
     }
 
@@ -121,4 +106,49 @@ class PhotoGridViewController: UICollectionViewController, UICollectionViewDeleg
         collectionView?.reloadData()
     }
 
+}
+
+
+class PhotoCell: UICollectionViewCell {
+    static let id: String = "PhotoCell"
+    
+    private let imageView =  UIImageView()
+    private let indicator = UIView()
+
+    public weak var data: PhotoObject? {
+        didSet {
+            guard let photo = data else { return }
+            let image = PhotoStore.shared.getUIImageFromPhoto(photo: photo)
+            let title = photo.title
+            let desc = photo.desc
+            imageView.image = image
+            indicator.isHidden = title?.isEmpty == true || desc?.isEmpty == true
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.addSubview(imageView)
+        contentView.addSubview(indicator)
+        imageView.contentMode = .scaleAspectFill
+        contentView.clipsToBounds = true // needed to prevent vertical overflow
+        indicator.backgroundColor = .white
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = nil
+        indicator.isHidden = true
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView.frame = contentView.bounds
+        indicator.frame = CGRect(x: 20, y: 20, width: 20, height: 20)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
